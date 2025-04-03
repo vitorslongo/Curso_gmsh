@@ -69,7 +69,7 @@ gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.1)
 gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.1)
 # podemos definir também o tamanho da malha em cada ponto, linha ou superfície, mas como isso entra na parte de controle de malha vamos falar disso depois
 
-
+gmsh.model.occ.add
 
 
 
