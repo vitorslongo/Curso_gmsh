@@ -5,9 +5,11 @@ occ = gmsh.model.occ
 mesh = gmsh.model.mesh
 gmsh.option.setNumber("General.Verbosity", 0)
 origin = [0]*3
+# Controle de tamanho geral:
+# gmsh.option.setNumber("Mesh.MeshSizeFactor", 0.1)
 
 global_size = 5
-refine_size = .01
+refine_size = .1
 surfaces_list = [5, 12]
 fields_list = []
 
@@ -35,7 +37,7 @@ mesh.field.setAsBackgroundMesh(minimum_field)
 mesh.field.setAsBackgroundMesh(minimum_field)
 
 
-mesh.generate(3)
+mesh.generate(2)
 # gmsh.write("cilindro_teste.stl")
 gmsh.fltk.run()
 gmsh.finalize()
