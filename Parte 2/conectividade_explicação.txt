@@ -1,0 +1,6 @@
+o meu arquivo tem:
+    14 nós
+    12 linhas
+    24 triângulos
+    24 tetraedros
+    8 pontos

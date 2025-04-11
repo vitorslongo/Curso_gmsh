@@ -9,7 +9,7 @@ origin = [0]*3
 # gmsh.option.setNumber("Mesh.MeshSizeFactor", 0.1)
 
 global_size = 5
-refine_size = .1
+refine_size = .01
 surfaces_list = [5, 12]
 fields_list = []
 
