@@ -33,21 +33,15 @@ for wire in wires:
     surfaces.append(occ.addSurfaceFilling(wire))
 
 occ.synchronize()
-occ.extrude(gmsh.model.getEntities(2), 0, 0, 1, recombine=True)
+occ.extrude(gmsh.model.getEntities(2), 0, 0, 1)
 
 occ.synchronize()
 
-volume_tags = []
-for _, voltag in gmsh.model.getEntities(3):
-    volume_tags.append(voltag)
-
-surface_tags = []
-for _, surface_tag in gmsh.model.getEntities(2):
-    surface_tags.append(surface_tag)
-
+surface_tags = [s[1] for s in gmsh.model.getEntities(2)]
 for surface in surface_tags:
     mesh.setTransfiniteSurface(surface)
 
+volume_tags = [v[1] for v in gmsh.model.getEntities(3)]
 for volume in volume_tags:
     mesh.setTransfiniteVolume(volume)
 
