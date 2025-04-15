@@ -31,9 +31,16 @@ section_nodal_coordinates[n_indexes, :1] = node_indexes.reshape(-1, 1) - 1
 
 
 element_types, element_indexes, element_nodes = gmsh.model.mesh.getElements(2, -1)
+
+element_types = np.array(element_types)
+element_indexes = np.array(element_indexes)
+element_nodes = np.array(element_nodes)
+
 for i in range(len(element_nodes)):
     element_name, _, _, nodes_per_element, _, _ = gmsh.model.mesh.getElementProperties(element_types[i])
-
+    element_name = np.array(element_name)
+    nodes_per_element = np.array(nodes_per_element)
+    
     n_elements = len(element_indexes)
     e_indexes = np.arange(n_elements, dtype=int)
     cols = nodes_per_element
