@@ -4,15 +4,6 @@ gmsh.initialize()
 occ = gmsh.model.occ
 mesh = gmsh.model.mesh
 
-"""
-o meu arquivo tem:
-    14 nós
-    12 linhas
-    24 triângulos
-    24 tetraedros
-    8 pontos
-"""
-
 gmsh.option.setNumber("General.Verbosity", 0)
 
 occ.addRectangle(0, 0, 0, 1, 1)
@@ -38,19 +29,19 @@ element_nodes = np.array(element_nodes)
 
 for i in range(len(element_nodes)):
     element_name, _, _, nodes_per_element, _, _ = gmsh.model.mesh.getElementProperties(element_types[i])
-    element_name = np.array(element_name)
-    nodes_per_element = np.array(nodes_per_element)
-    
-    n_elements = len(element_indexes)
+
+    element_indexes_i, element_nodes_i = element_indexes[i], element_nodes[i]
+    n_elements = len(element_indexes_i)
     e_indexes = np.arange(n_elements, dtype=int)
     cols = nodes_per_element
 
     section_connectivity = np.zeros((n_elements, cols+1))
     section_connectivity[:, 0] = e_indexes
-    section_connectivity[:, 1:] = element_nodes.reshape(-1, cols) - 1
+    section_connectivity[:, 1:] = element_nodes_i.reshape(-1, cols) - 1
 
-    section_connectivities = dict()
-    section_connectivities[element_name] = section_connectivity
+
+print(section_nodal_coordinates)
+# print(section_connectivity)
 
 
 
