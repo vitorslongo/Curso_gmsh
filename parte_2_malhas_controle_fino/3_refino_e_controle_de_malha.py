@@ -5,6 +5,18 @@ occ = gmsh.model.occ
 mesh = gmsh.model.mesh
 gmsh.option.setNumber("General.Verbosity", 0)
 origin = [0]*3
+
+"""
+Existem vários tipos de controle de malha:
+- Por elemento geométrico (0, 1, 2?, 3?) (só pelo kernel integrado do Gmsh)
+- Controle geral:
+    - Size Factor
+    - Range de Size Factor
+    - Comprimento característico (o que é?)
+- Refino de malha
+    - Vários tipos de size fields: Por entidade (1?, 2, 3), Box, MathEval, Atractor etc (ver documentação do Gmsh)
+- Malhas estruturadas --> linhas, superfícies e volumes transfinite
+"""
 # Controle de tamanho geral:
 # gmsh.option.setNumber("Mesh.MeshSizeFactor", 0.1)
 
