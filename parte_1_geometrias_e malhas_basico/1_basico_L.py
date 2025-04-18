@@ -1,10 +1,18 @@
+"""
+Nesse exemplo vamos aprender o beabá do Gmsh de geração de geometrias e malhas.
+Vamos gerar uma superície em forma de L e malhar ela, depois, vamos extrudá-la e gerar uma malha 3D.
+"""
 import gmsh
-
 gmsh.initialize()
 gmsh.option.setNumber("General.Terminal", 0)
-# IMPORTANTÍSSIMO: SYNCHRONIZE DO OCC 
 
-# poderia fazer assim
+# É muito importante inicializar o gmsh, senão nada funciona.
+# Também falamos para o Gmsh não printar nada no terminal pois por enquanto nao precisamos, só usamos isso normalmente
+# caso queiramos debugar o nosso código.
+
+# Primeiro vamos gerar os pontos que definem as nossas linahs:
+
+# Pooderíamos fazer assim:
 # p1 = gmsh.model.occ.addPoint(0, 0, 0)
 # p2 = gmsh.model.occ.addPoint(2, 0, 0)
 # p3 = gmsh.model.occ.addPoint(2, 1, 0)
@@ -12,7 +20,7 @@ gmsh.option.setNumber("General.Terminal", 0)
 # p5 = gmsh.model.occ.addPoint(1, 3, 0)
 # p6 = gmsh.model.occ.addPoint(0, 3, 0)
 
-# ou assim (maneira mais compacta)
+# Ou assim (maneira mais compacta)
 points_coords = [
     [0, 0, 0],
     [2, 0, 0],
@@ -24,18 +32,16 @@ points_coords = [
 gmsh_points =[]
 for coords in points_coords:
     point = gmsh.model.occ.addPoint(*coords)
-    # fazer dessa maneira de cima é a mesma coisa que fazer
+    # fazer o unpacking dessa maneira é a mesma coisa que fazer
     # gmsh.model.occ.addPoint(coords[0], coords[1], coords[2])
     gmsh_points.append(point)
 
-# perguntar se as pessoas estão entendendo, se for muito complexo, fazer da maneira mais simples
-
-
-# OU ASSIM, DA MANEIRA MAIS COMPACTA POSSÍVEL:
+# Ou assim, se você quiser fazer da maneira mais compacta possível:
 # gmsh_points = [gmsh.model.occ.addPoint(*coords) for coords in points_coords]
 
+# Essas 3 opções fazem exatamente a mesma coisa, gera os pontos conforme as coordenadas que passamos.
 
-# print(gmsh_points)
+# print(gmsh_points) # <-- teste para ver se os pontos e coordenadas que colocamos faz sentido.
 gmsh_lines = []
 for tag in gmsh_points:
     if tag == gmsh_points[-1]:
@@ -45,44 +51,34 @@ for tag in gmsh_points:
 
     gmsh_lines.append(line)
 
-# explicar que essa lógica é para tratar do caso do último ponto, que deve ser conectado ao primeiro
+# Essa lógica do if e else é para tratar o ultimo ponto, que nao segue a mesma lógica dos outros, pois ele nao vai
+# se conectar com o próximo, mas sim com o primeiro.
 
-# se eu tentar fazer uma malha aqui nao vai funcionar, porque eu nao tenho uma superfície
-
+# Se eu tentar fazer uma malha aqui nao vai funcionar, porque eu nao tenho uma superfície!
+# Mas antes ainda de fazermos a superfície, precisamos falar para o Gmsh que essas linhas que eu criei fazem um loop:
 curve_loop = gmsh.model.occ.addCurveLoop(gmsh_lines)
+
+# Depois disso podemos dizer que esse loop é uma superfície:
 l_surface = gmsh.model.occ.addPlaneSurface([curve_loop])
 
-# Agora sim. Deve funcionar
-
-# tendo isso vamos testar as extrusões:
-gmsh.model.occ.extrude([(2, l_surface)], 0, 0, 1)
-# feito, simples assim
-
-# não precisamos ficar gerando a malha dessa forma na interface, podemos fazer isso diretamente no nosso script:
-# mas nós devemos colocar o synchronize antes de gerar a malha!!
-# (colocamos o codigo de gerar a malha lá embaixo para nao termos mais erros)
+# Antes só de testar, um ponto muito importante: como o kernel com o qual a gente gerou a geometria é apenas uma adjacência
+# do Gmsh, precisamos dizer para ele sincronizar o que foi feito com esse kernel com o Gmsh em si.
 gmsh.model.occ.synchronize()
 
+# Agora sim, deve funcionar.
+# gmsh.model.mesh.generate(2)
 
-# para definirmmos o tamanho da malha, podemos fazer da seguinte maneira:
-gmsh.option.setNumber("Mesh.CharacteristicLengthMin", 0.1)
-gmsh.option.setNumber("Mesh.CharacteristicLengthMax", 0.1)
-# podemos definir também o tamanho da malha em cada ponto, linha ou superfície, mas como isso entra na parte de controle de malha vamos falar disso depois
+# Vamos um passo além agora, uma malha 3D. Nesse caso aqui vamos só extrudar a superfície que a gente fez na direção z
+# para obtermos um sólido. Vale ressltar que nao precisamos definir nada aqui que o que extrudamos é um volume, superfície, etc.
+# O OCC já cuida disso para nós.
+gmsh.model.occ.extrude([(2, l_surface)], 0, 0, 1)
+# Feito, simples assim temos uma geometria 3D.
 
-# gmsh.model.occ.add
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Vamos sincronizar novamente e gerar a malha 3D agora.
+gmsh.model.occ.synchronize()
 gmsh.model.mesh.generate(3)
+
+# Caso você esteja se perguntando como controlamos o tamanho da nossa malha, isso será visto no exemplo 3, mas ainda temos
+# mais algumas coisas legais sobre geometrias que precisamos ver. Vamos para o próximo exemplo!
 gmsh.fltk.run()
 gmsh.finalize()

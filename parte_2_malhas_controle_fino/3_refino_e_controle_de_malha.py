@@ -1,5 +1,8 @@
+"""
+Nesse exemplo aqui aprendemos mais sobre um controle mais fino sobre as nossas malhas, inclusive refino local da malha.
+Geramos uma geometria base e trabalhamos nela, e também podemos ver as diferenças entre os vários algoritmos de geração de malha.
+"""
 import gmsh
-
 gmsh.initialize()
 occ = gmsh.model.occ
 mesh = gmsh.model.mesh
@@ -17,10 +20,12 @@ Existem vários tipos de controle de malha:
     - Vários tipos de size fields: Por entidade (1?, 2, 3), Box, MathEval, Atractor etc (ver documentação do Gmsh)
 - Malhas estruturadas --> linhas, superfícies e volumes transfinite
 """
-# Controle de tamanho geral:
-# gmsh.option.setNumber("Mesh.MeshSizeFactor", 0.1)
+# Controle de tamanho geral: Esse aqui só escala pelo fator que colocarmos o tamanho da malha que teria se nao disséssemos nada
+# gmsh.option.setNumber("Mesh.MeshSizeFactor", 10)
+# gmsh.option.setNumber("Mesh.CharacteristicLengthFactor", 10)
 
-global_size = 5
+# Para um controle mais preciso para malhas que contem refinamento local, fazemos dessa forma:
+global_size = .05
 refine_size = .01
 surfaces_list = [5, 12]
 fields_list = []
@@ -31,17 +36,28 @@ small_cylinder = occ.add_cylinder(.5, 0, 1, 0, 0, 1, .2)
 small_box = occ.addBox(-.5, 0, 1, .2, .2, 1 )
 occ.synchronize()
 
-# Refino de malha
+# Refino de malha:
+# Ele é feito usando "size fields", que são campos onde dentro deles nós podemos definir algumas características, uma delas é o tamanho da malha.
+# Tem vários tipos de campo, nesse caso nós usamos o "Constant" pois nao queremos nada tão avançado, mas caso queira, olhe na documentação do Gmsh
+# os vários outros tipos de campos pois neles podem ser definidas características da malha de uma maneira muito mais específica.
+
+# O controle de malha que nós queremos é dentro e fora, então primeiro nós definimos um campo vazio (com nenhuma superfície), e FORA dele nós dizemos qual
+# o tamanho da malha que queremos. Se pararmos por aí seria a mesma coisa que só controlar o tamanho da malha normalmente por outros métodos.
 outer_field = mesh.field.add("Constant")
 mesh.field.setNumbers(outer_field, "SurfacesList", [])
 mesh.field.setNumber(outer_field, "VOut", global_size)
 fields_list.append(outer_field)
 
-refine_field = mesh.field.add("Constant") # chamar atenção para setNumber e setNumbers com "s" e sem "s"
-mesh.field.setNumbers(refine_field, "SurfacesList", surfaces_list)
+# Mas o cerne da coisa vem aí, nós agora definimos um campo e passamos a lista de pontos, curvas, superfícies ou volumes nesse função a seguir que conseguimos
+# definir o "VIn", eu seja o Value Inside, da malha desse size field.
+refine_field = mesh.field.add("Constant")
+mesh.field.setNumbers(refine_field, "SurfacesList", surfaces_list) # Atenção para setNumber e setNumberS 
 mesh.field.setNumber(refine_field, "VIn", refine_size)
 fields_list.append(refine_field)
 
+# Depois aqui é coisa do Gmsh que nunca entendi, mas precimaos definir um outro campo "Min" para incluir os campos que definimos o VOut e o VIn
+# (inclsive pode-se ter mais de um campo onde refinamos a malha com valores diferentes). Após isso nós definimos esse campo Min como backgorund mesh e 
+# continuamos com qualuqer outra configuração normalmente.
 minimum_field = gmsh.model.mesh.field.add("Min")
 mesh.field.setNumbers(minimum_field, "FieldsList", fields_list)
 mesh.field.setAsBackgroundMesh(minimum_field)

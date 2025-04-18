@@ -1,17 +1,13 @@
+"""
+Aqui nós vamos pegar as informações que o Gmsh nos sobre a malha dá de uma maneira meio ruim e vamos organizar os dados de forma com a qual possamos
+trabalhar com eles e implementar nos nossos solvers.
+"""
 import gmsh
 import numpy as np
 gmsh.initialize()
 occ = gmsh.model.occ
 mesh = gmsh.model.mesh
 
-"""
-o meu arquivo tem:
-    14 nós
-    12 linhas
-    24 triângulos
-    24 tetraedros
-    8 pontos
-"""
 
 gmsh.option.setNumber("General.Verbosity", 0)
 

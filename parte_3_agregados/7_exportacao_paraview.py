@@ -1,3 +1,6 @@
+"""
+Esse exemplo 
+"""
 import gmsh
 
 gmsh.initialize()
@@ -19,8 +22,8 @@ gmsh.model.mesh.setTransfiniteVolume(1)
 gmsh.option.setNumber("Mesh.CharacteristicLengthFactor", 0.1)
 gmsh.option.setNumber("Mesh.RecombineAll", 1)
 gmsh.model.mesh.generate(3)
-# gmsh.fltk.run()
+gmsh.fltk.run()
 
 
 
-gmsh.write("placa_estruturada.vtk")
+# gmsh.write("placa_estruturada.vtk")

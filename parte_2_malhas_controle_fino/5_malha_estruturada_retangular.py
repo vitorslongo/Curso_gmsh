@@ -1,3 +1,7 @@
+"""
+Esse aqui é um outro exemplo na pegada do da viga I, mas é uma saeção transversal diferente caso tenha ficado difícil de entender no primeiro a 
+geração da geometria.
+"""
 import gmsh
 occ = gmsh.model.occ
 mesh = gmsh.model.mesh
