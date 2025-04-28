@@ -10,7 +10,7 @@ gmsh.option.setNumber("General.Verbosity", 0)
 origin = [0]*3
 
 """
-Existem vários tipos de controle de malha:
+Existem vários tipos de controle de tamanho de malha:
 - Por elemento geométrico (0, 1, 2?, 3?) (só pelo kernel integrado do Gmsh)
 - Controle geral:
     - Size Factor
@@ -19,7 +19,41 @@ Existem vários tipos de controle de malha:
 - Refino de malha
     - Vários tipos de size fields: Por entidade (1?, 2, 3), Box, MathEval, Atractor etc (ver documentação do Gmsh)
 - Malhas estruturadas --> linhas, superfícies e volumes transfinite
+- Também temos vários diferentes algoritmos de malha. Para setar cada um usamos o comando, seguindo esta relação de nomenclatura:
 """
+# 2D Mesh Algorithms
+MESH_ADAPT_2D = 1
+AUTOMATIC_2D = 2
+INITIAL_MESH_ONLY_2D = 3
+DELAUNAY_2D = 5
+FRONTAL_DELAUNAY_2D = 6
+BAMG_2D = 7
+FRONTAL_DELAUNAY_FOR_QUADS_2D = 8
+PACKING_OF_PARALLELOGRAMS_2D = 9
+QUASI_STRUCTURED_QUADS_2D = 11
+
+
+
+# 3D Mesh Algorithms
+DELAUNAY_3D = 1
+INITIAL_MESH_ONLY_3D = 3
+FRONTAL_3D = 4
+MMG_3D = 7
+RTREE_3D = 9
+HXT_3D = 10
+
+# Recombination Algorithms
+SIMPLE_RECOMBINATION = 0
+BLOSSOM_RECOMBINATION = 1
+SIMPLE_FULL_QUAD_RECOMBINATION = 2
+BLOSSOM_FULL_QUAD_RECOMBINATION = 3
+
+# Subdivision Algorithms
+NO_SUBDIVISION = 0
+ALL_QUADRANGLES_SUBDIVISION = 1
+ALL_HEXAHEDRA_SUBDIVISION = 2
+BARYCENTRIC_SUBDIVISION = 3
+
 # Controle de tamanho geral: Esse aqui só escala pelo fator que colocarmos o tamanho da malha que teria se nao disséssemos nada
 # gmsh.option.setNumber("Mesh.MeshSizeFactor", 10)
 # gmsh.option.setNumber("Mesh.CharacteristicLengthFactor", 10)
@@ -55,7 +89,7 @@ mesh.field.setNumbers(refine_field, "SurfacesList", surfaces_list) # Atenção p
 mesh.field.setNumber(refine_field, "VIn", refine_size)
 fields_list.append(refine_field)
 
-# Depois aqui é coisa do Gmsh que nunca entendi, mas precimaos definir um outro campo "Min" para incluir os campos que definimos o VOut e o VIn
+# Depois aqui precimaos definir um outro campo "Min" para incluir os campos que definimos o VOut e o VIn
 # (inclsive pode-se ter mais de um campo onde refinamos a malha com valores diferentes). Após isso nós definimos esse campo Min como backgorund mesh e 
 # continuamos com qualuqer outra configuração normalmente.
 minimum_field = gmsh.model.mesh.field.add("Min")
