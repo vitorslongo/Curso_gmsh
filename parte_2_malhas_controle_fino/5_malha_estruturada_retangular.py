@@ -1,5 +1,5 @@
 """
-Esse aqui é um outro exemplo na pegada do da viga I, mas é uma saeção transversal diferente mais simples caso tenha ficado difícil de entender no primeiro a 
+Esse aqui é um outro exemplo na pegada do da viga I, mas é uma seção transversal diferente mais simples caso tenha ficado difícil de entender no primeiro a 
 geração da geometria.
 """
 import gmsh
