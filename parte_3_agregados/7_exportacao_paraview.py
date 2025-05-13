@@ -26,4 +26,4 @@ gmsh.fltk.run()
 
 
 
-# gmsh.write("placa_estruturada.vtk")
+gmsh.write("placa_estruturada.vtk")
