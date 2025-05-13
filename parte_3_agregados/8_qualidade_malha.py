@@ -1,3 +1,8 @@
+""""
+Último exemplo, aqui nós vamos aprender um pouco sobre os parâmetros que podemos analisar sobre controle de qualidade de malha, para detectarmos elementos colapsados, muito
+distorcidos, etc. Isso é importante pois esses tipos de defeito podem comprometer a nossa solução se passarem despercebidos. Vamos lá!
+"""
+
 import gmsh
 gmsh.initialize()
 gmsh.option.setNumber("General.Terminal", 0)
@@ -5,7 +10,7 @@ gmsh.option.setNumber("General.Terminal", 0)
 occ = gmsh.model.occ
 mesh = gmsh.model.mesh
 
-# Vamos gerar uma geometria que com certeza vai gerar elementos distorcidos para visualizarmos os parametros e seus valores
+# Vamos gerar uma geometria que com certeza vai gerar elementos distorcidos para visualizarmos os parâmetros e seus valores
 main = occ.addRectangle(0, 0, 0, 1, 2)
 
 rec1 = occ.addRectangle(0, .75, 0, .54, .5)
@@ -61,21 +66,5 @@ print(parameter,"max:", max)
 
 gmsh.fltk.run()
 gmsh.finalize()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

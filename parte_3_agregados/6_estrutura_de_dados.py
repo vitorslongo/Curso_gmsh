@@ -27,6 +27,7 @@ node_indexes, coords, _ = mesh.getNodes(2, -1, True)
 
 # O que fazemos aqui é basicamente dar o nosso próprio nome para os nós, basicamente um apelido, e organizamos uma matriz de forma que:
 # Sendo "n" o número de nós da malha, criamos uma matriz n x 4, onde a primeira coluna é o apelido do nó e as outras 3 são as coordenadas dele.
+
 n_nodes = len(node_indexes) # o numero de nós é a quantidade de indexes de nós
 n_indexes = np.arange(n_nodes, dtype=int) # crio a lista com os indexes pra facilitar a atribuição depois
 section_nodal_coordinates = np.zeros((n_nodes, 4)) # inicializo a matriz de coordenadas nodais
@@ -40,25 +41,24 @@ element_types, element_indexes, element_nodes = gmsh.model.mesh.getElements(2, -
 
 section_connectivities = dict()
 # Para cada elemento:
+print(element_nodes)
 for i in range(len(element_nodes)):
     element_name, _, _, nodes_per_element, _, _ = gmsh.model.mesh.getElementProperties(element_types[i])
     
-    element_indexes_i = element_indexes[i]
-    element_nodes_i = element_nodes[i]
-
-    n_elements = len(element_indexes_i)
+    n_elements = len(element_indexes[i])
     e_indexes = np.arange(n_elements, dtype=int)
-    cols = nodes_per_element
 
-    section_connectivity = np.zeros((n_elements, cols + 1))
-    section_connectivity[:, 0] = e_indexes
-    section_connectivity[:, 1:] = element_nodes_i.reshape(-1, cols) - 1
+    section_connectivity = np.zeros((n_elements, nodes_per_element + 1))
+    section_connectivity[:, 0] = e_indexes # coloco os apelidos dos elementos
+    section_connectivity[:, 1:] = element_nodes[i].reshape(-1, nodes_per_element) - 1 # coloco os nós que estão conectados a cada elemento,
+    # e faço essa lista ter começo no 0, e não no 1, como é originalmente no gmsh
 
-    section_connectivities[element_name] = section_connectivity
+    section_connectivities[element_name] = section_connectivity # no nosso caso temos apenas um tipo de elementos na malha, que são triangulos, mas essa parte aqui faz o mapeamento para 
+    # malhas que podem ter vários tipos de elementos (triangulos, quadrados, etc.)
 
 
 # pprint(section_nodal_coordinates)
-pprint(section_connectivities)
+# pprint(section_connectivities)
 
 # print("node_tags:", node_tags)
 
