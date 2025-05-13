@@ -49,9 +49,6 @@ sinal do determinante do jacobiano --> orientação do sistema de coordendas loc
 norma de Frobenius (nornalizada) --> soma do tamanho dos vetores que compoem o sist. de corrd. locais, deteca esticamento do elemento
 """
 
-
-
-
 for element in mesh.get_elements(3, 1)[1]:
     min = min(mesh.getElementQualities(element, parameter))
     max = max(mesh.getElementQualities(element, parameter))
