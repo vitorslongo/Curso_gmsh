@@ -1,5 +1,5 @@
 """
-Nesse exemplo vamos aprender o beabá do Gmsh de geração de geometrias e malhas.
+Nesse exemplo vamos aprender o básico do Gmsh de geração de geometrias e malhas.
 Vamos gerar uma superície em forma de L e malhar ela, depois, vamos extrudá-la e gerar uma malha 3D.
 """
 import gmsh

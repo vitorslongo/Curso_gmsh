@@ -1,5 +1,5 @@
 """
-Esse exemplo 
+Esse exemplo  mostra simplesmente como exportar arquivos usando o gmsh. Para ver todos os tipos de extensão, veja a documentação.
 """
 import gmsh
 
